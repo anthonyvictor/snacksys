@@ -1,0 +1,25 @@
+export const replaceNumbersText = (text: string) => {
+  return text
+    .replace(/\b(um|uma)\b/g, "1")
+    .replace(/\b(doi(s|z)?|dua(s|z)?)\b/g, "2")
+    .replace(/\b(trei?(s|z)?)\b/g, "3")
+    .replace(/\b((q|c)u?atr?o)\b/g, "4")
+    .replace(/\b((s|c)i(n|m)(c|q)o)\b/g, "5")
+    .replace(/\b((s|c)ei(s|x))\b/g, "6")
+    .replace(/\b((s|c)et(e|i))\b/g, "7")
+    .replace(/\b(oit(o|u))\b/g, "8")
+    .replace(/\b(nov(e|i))\b/g, "9")
+    .replace(/\b(de(z|s))\b/g, "10")
+    .replace(/\b(o(n|m)(z|s)e)\b/g, "11")
+    .replace(/\b(do(z|s)e)\b/g, "12")
+    .replace(/\b(tre(z|s)e)\b/g, "13")
+    .replace(/\b((q|c)u?ator?(z|s)e)\b/g, "14")
+    .replace(/\b((q|c)u?i(n|m)(z|s)e)\b/g, "15")
+    .replace(/\b(vi(n|m)t(e|i))\b/g, "20")
+    .replace(/\b(tri(n|m)ta)\b/g, "30")
+    .replace(/\b((c|q)u?are(n|m)ta)\b/g, "40")
+    .replace(/\b((c|s)in(q|c)u?e(n|m)ta)\b/g, "50")
+    .replace(/\b((s|c)e(s|c)e(n|m)ta)\b/g, "60")
+    .replace(/\b((ce|se)(m|n))\b/g, "100")
+    .replace(/\b(d(u|o)(z|s)e(n|m)t(o|u)s)\b/g, "200");
+};

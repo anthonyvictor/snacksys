@@ -1,0 +1,27 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+            "moduleResolution": "bundler",
+        "jsx": "preserve",
+        "outDir": "./.next",
+        "incremental": true,
+        "types": [
+            "node"
+        ],
+        "allowJs": true,
+        "noEmit": true,
+        "isolatedModules": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        }
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "types",
+  "private": true,
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "devDependencies": {
+    "mongoose": "^8.20.0"
+  },
+  "peerDependencies": {
+    "mongoose": "*"
+  }
+}

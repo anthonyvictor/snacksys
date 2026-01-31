@@ -1,0 +1,15 @@
+{
+  "name": "chatbot-lanchonete",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace chat dev & yarn workspace api dev",
+    "dev:web": "yarn workspace chat dev",
+    "dev:api": "yarn workspace api dev",
+    "build": "yarn workspaces run build",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx"
+  }
+}
