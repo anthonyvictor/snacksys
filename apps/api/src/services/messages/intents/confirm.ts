@@ -11,7 +11,7 @@ export const confirm: MsgIntentFunc = async ({ normalized }) => {
         "sim",
       )
       .replace(
-        /\b(((nao|sim)\s+)?(eh?\s+)?((soh?|apenas?)\s+)is+o (mes?mo)?|ta(h|r)?\s+(bo?m|cer?to?|ct)|(eh?\s+)?po?de?\s+(se?r?|pah?)|s|ta(h|r)?|is+o(\s+mes?mo?)?|yes|sin?|positivo|(ta(h|r)?\s+)?co(n|m)fir?m(o|e|a|ad(o|a)s?)|(ta(h|r)?\s+)?vi(u|o)|(ta(h|r)?\s+)?ok(ay|ei|ey|ai)?|(ta(h|r)?\s+)?cla?ro+(\s+qu?e?)?(\s+sim)?|(ta(h|r)?\s+)?(cer?|core|exa)t(o|amente?)?)\b/g,
+        /\b(((nao|sim)\s+)?(eh?\s+)?((soh?|apenas?)\s+)is+o(\s+mes?mo)?|ta(h|r)?\s+(bo?m|cer?to?|ct)|(eh?\s+)?po?de?\s+(se?r?|pah?)|s|ta(h|r)?|is+o(\s+mes?mo?)?|yes|sin?|positivo|(ta(h|r)?\s+)?co(n|m)fir?m(o|e|a|ad(o|a)s?)|(ta(h|r)?\s+)?vi(u|o)|(ta(h|r)?\s+)?ok(ay|ei|ey|ai)?|(ta(h|r)?\s+)?cla?ro+(\s+qu?e?)?(\s+sim)?|(ta(h|r)?\s+)?(cer?|core|exa)t(o|amente?)?)\b/g,
         "sim",
       )
       .replace(
@@ -32,6 +32,8 @@ export const confirm: MsgIntentFunc = async ({ normalized }) => {
   )
     .replace(/\s+/g, " ")
     .trim();
+
+  console.log("CONFIRM INTENT", { normalized, n });
 
   return !!n.match(/^sim/g) && maxWords(normalized, 3);
 };

@@ -22,7 +22,8 @@ export const sendMeLocationTemplate: MsgReplyFunc = async ({ chat }) => {
           )}`,
           `2. Depois em ${bold(`"Localização"`)}`,
           `3. E por último em ${bold(`"Localização atual"`)}`,
-          // `Se não conseguir, me manda o endereço completo ${bold("rua, bairro e pontos de referência")}`
+          " ",
+          `Se não conseguir, me manda o endereço completo ${bold("rua, bairro e pontos de referência")}`,
         ],
         mediaUrl: "https://i.ibb.co/Hf2S6pYV/passo-a-passo-localizacao.png",
       },

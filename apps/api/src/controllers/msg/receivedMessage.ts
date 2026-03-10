@@ -5,6 +5,7 @@ import {
   ChatModel,
   ff,
   ffid,
+  formatPhoneNumber,
   IChat,
   IMessage,
   IntentResult,
@@ -41,13 +42,42 @@ export const handler_receivedMessage = async (req: Request, res: Response) => {
 };
 
 export const receivedMessage = async (data: ReceivedMessageDTO) => {
+  if (data.platform === "whatsapp") {
+    if (
+      [
+        "+55719 8872-6927", //pizzaria
+        // "+55719 8447-9191", //anthony
+        "+55719 9998-0610", //gabrielle
+        "+55719 8105-9300", //railly
+      ].every((x) => {
+        const a = formatPhoneNumber(x);
+        const b = formatPhoneNumber(data.from.phoneNumber!);
+        const isDiff = a !== b;
+        console.log(
+          "tel a:",
+          a,
+          "\ntel b:",
+          b,
+          "\nisDiff",
+          isDiff,
+          "\norig a:",
+          x,
+          "\norig b:",
+          data.from.phoneNumber,
+        );
+        return isDiff;
+      })
+    )
+      return [];
+  }
+
   try {
-    const lastMsg = cache.get<ReceivedMessageDTO>(data.from);
+    const lastMsg = cache.get<ReceivedMessageDTO>(data.from.id);
 
     if (!lastMsg) {
-      cache.set<ReceivedMessageDTO>(data.from, data);
+      cache.set<ReceivedMessageDTO>(data.from.id, data);
     } else {
-      cache.set<ReceivedMessageDTO>(data.from, {
+      cache.set<ReceivedMessageDTO>(data.from.id, {
         ...data,
         body: lastMsg.body + " " + data.body,
       });
@@ -60,7 +90,10 @@ export const receivedMessage = async (data: ReceivedMessageDTO) => {
 
 export const reply = async (data: ReceivedMessageDTO) => {
   let chat: IChat | null | undefined;
+
   try {
+    if (data.platform !== "whatsapp")
+      throw new Error("Plataforma não suportada");
     if (!data.body || !data.body.replace(/[^a-zA-Z0-9]/g, "").length) return;
 
     const configs = await getConfigs();
@@ -76,21 +109,22 @@ export const reply = async (data: ReceivedMessageDTO) => {
 
     chat = (
       await getChats({
-        from: [data.from],
+        from: [data.from.id],
         status: ["open"],
         platforms: [data.platform],
       })
     )?.[0];
 
+    console.log("chat", chat, "\ndata.from.id", data.from.id);
+
     if (!chat) {
-      const customer = (
-        await getCustomers({
-          phone: [data.from],
-        })
-      )?.[0];
+      // const customer = (
+      //   await getCustomers({
+      //     phone: [data.from.phoneNumber],
+      //   })
+      // )?.[0];
 
       chat = await ChatModel.create({
-        customer: customer?.id,
         ...data,
       });
 
@@ -169,7 +203,9 @@ export const reply = async (data: ReceivedMessageDTO) => {
   } catch (err) {
     console.error(err);
     try {
-      await saveChat(chat?.id, { isReplying: false });
+      if (chat) {
+        await saveChat(chat.id, { isReplying: false });
+      }
     } catch (e) {}
     return ["Ops, ocorreu um erro aqui!"];
   }

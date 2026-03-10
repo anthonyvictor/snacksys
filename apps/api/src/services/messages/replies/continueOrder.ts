@@ -2,7 +2,7 @@ import { IMessage, MessageReplyDTO, MsgReplyFunc } from "types";
 import { getTotal } from "@/services/order/total";
 import { formatCurrency } from "@/services/format";
 import { join } from "@/services/text/join";
-import { whatNameTemplate } from "../templates/whatName";
+import { askCustomerNameTemplate } from "../templates/askCustomerName";
 
 export const continueOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
   const order = chat.order;
@@ -55,7 +55,7 @@ export const continueOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
       },
     ];
   } else if (!order.customer) {
-    return whatNameTemplate({ chat, msg, entities });
+    return askCustomerNameTemplate({ chat, msg, entities });
   } else {
     const data: string[] = [];
 
@@ -66,7 +66,7 @@ export const continueOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
           [
             `*- x${prod.quantity} ${prod.original.name}*`,
             ` ${formatCurrency(prod.price * prod.quantity - prod.discount)}`,
-          ].join("\n")
+          ].join("\n"),
         )
         .join("\n\n");
 
@@ -82,7 +82,7 @@ export const continueOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
         `*==== ENTREGA ====*\n\n` +
         join(
           [neighborhood, complement, number, reference, street, zipCode],
-          ", "
+          ", ",
         );
       data.push(delivery);
     } else if (order.type === "pickup") {
@@ -100,15 +100,15 @@ export const continueOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
                 pay.method === "card"
                   ? "No cartão"
                   : pay.method === "cash"
-                  ? "Em dinheiro"
-                  : "Via PIX"
+                    ? "Em dinheiro"
+                    : "Via PIX"
               }*`,
               pay.method === "cash"
                 ? ` ${pay.changeFor ? `Troco p/${pay.changeFor}` : "Sem troco"}`
                 : "",
             ],
-            "\n"
-          )
+            "\n",
+          ),
         )
         .join("\n\n");
     data.push(payments);

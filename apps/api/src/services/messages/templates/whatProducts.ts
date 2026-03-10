@@ -10,9 +10,9 @@ export const whatProductsTemplate: MsgReplyFunc = async () => {
         `Manda tudo em uma mensagem só de forma clara, por ex: "2 pastéis de frango e uma pepsi 1L"`,
       ],
     },
-    {
-      body: [`Se quiser, te mando o cardápio atualizado, é só me pedir! 😉`],
-      delay: 1000,
-    },
+    // {
+    //   body: [`Se quiser, te mando o cardápio atualizado, é só me pedir! 😉`],
+    //   delay: 1000,
+    // },
   ];
 };

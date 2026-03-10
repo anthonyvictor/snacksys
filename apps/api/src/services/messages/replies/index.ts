@@ -12,7 +12,7 @@ export * from "./observations";
 export * from "./informReceivingMethod";
 export * from "./askPaymentMethods";
 export * from "./unknownIntent";
-export * from "./continueOrder";
+export * from "./informName";
 export * from "./rollback";
 export * from "./confirm";
 export * from "./deny";

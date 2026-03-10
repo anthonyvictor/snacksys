@@ -1,4 +1,3 @@
-import { join } from "@/services/text/join";
 import { textStyles } from "@/services/text/styles";
 import { MsgReplyFunc } from "types";
 import { sendMeLocationTemplate } from "./sendMeLocation";
@@ -11,7 +10,11 @@ export const whatAddressTemplate: MsgReplyFunc = async ({
 }) => {
   const { bold, italic } = textStyles;
 
-  if (chat?.customer?.address && !chat.askSavedAddress)
+  if (
+    chat.order?.products?.length &&
+    chat.order.customer?.address &&
+    !chat.askSavedAddress
+  )
     return savedAddressTemplate({ chat, msg, entities });
 
   if (

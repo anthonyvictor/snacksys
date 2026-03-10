@@ -13,8 +13,12 @@ export const handler_getCustomers = async (req: Request, res: Response) => {
   }
 };
 
-export const getCustomers = async ({ phone, query }: GetCustomersDTO) => {
+export const getCustomers = async ({ ids, phone, query }: GetCustomersDTO) => {
   let q: any = {};
+
+  if (ids && ids.length > 0) {
+    q["_id"] = { $in: ids };
+  }
 
   if (phone && phone.length > 0) {
     q["phone"] = {

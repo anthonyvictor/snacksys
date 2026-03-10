@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { LucideProps, Send, Trash } from "lucide-react"; // Ícone de envio (necessita 'lucide-react')
+import { LucideProps, Send, Trash, UserX } from "lucide-react"; // Ícone de envio (necessita 'lucide-react')
 import { IChat, ReceivedMessageDTO, IMessage } from "types";
 import { io } from "socket.io-client";
 import { v4 } from "uuid";
@@ -10,13 +10,14 @@ const api = axios.create({
 });
 
 const Chat = () => {
-  const [remetente, setRemetente] = useState<string>("71984479191");
+  const [remetente, setRemetente] = useState<string>("");
   const [inputText, setInputText] = useState<string>("");
   const [chat, setChat] = useState<IChat>();
   const [mensagens, setMensagens] = useState<
     { direcao: "entrada" | "saida"; body: string; id: string; date: Date }[]
   >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSenderInput, setShowSenderInput] = useState<boolean>(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -24,6 +25,13 @@ const Chat = () => {
   };
 
   useEffect(scrollToBottom, [chat, mensagens]);
+
+  useEffect(() => {
+    const local = localStorage.getItem("remetente");
+
+    setRemetente(local ?? "");
+    if (!local) setShowSenderInput(true);
+  }, []);
 
   useEffect(() => {
     console.log("executou useeffect");
@@ -70,7 +78,11 @@ const Chat = () => {
     try {
       const payload: ReceivedMessageDTO = {
         body: msg,
-        from: remetente,
+        from: {
+          id: remetente,
+          phoneNumber: remetente,
+          publicName: "Novo cliente",
+        },
         platform: "whatsapp",
       };
 
@@ -123,25 +135,32 @@ const Chat = () => {
       });
   };
 
+  const deleteChat = async (focusInput = true) => {
+    await api.delete("/chat", {
+      params: {
+        de: [remetente],
+      },
+    });
+
+    setMensagens([]);
+
+    if (focusInput)
+      (document.querySelector("#message") as HTMLInputElement)?.focus();
+  };
+
+  const deleteCustomer = async () => {
+    await deleteChat(false);
+    setRemetente("");
+    localStorage.setItem("remetente", "");
+    setShowSenderInput(true);
+    (document.querySelector("#remetente") as HTMLInputElement)?.focus();
+  };
   return (
     <div className="h-full bg-slate-900">
       <main className="flex h-svh w-full justify-center bg-slate-800">
-        <div className="flex flex-col bg-slate-950 p-2 text-white">
-          <Bt
-            Icone={Trash}
-            title="Deletar chat"
-            onClick={async () => {
-              await api.delete("/chat", {
-                params: {
-                  de: [remetente],
-                },
-              });
-
-              setMensagens([]);
-
-              (document.querySelector("#message") as HTMLInputElement)?.focus();
-            }}
-          />
+        <div className="flex flex-col bg-slate-950 p-2 gap-2 text-white">
+          <Bt Icone={Trash} title="Deletar chat" onClick={deleteChat} />
+          <Bt Icone={UserX} title="Apagar cliente" onClick={deleteCustomer} />
         </div>
         <div className="flex size-full flex-col bg-zinc-900 p-2 lg:max-w-xl">
           <ul className="no-scroll flex w-full flex-1 flex-col gap-2 overflow-y-auto">
@@ -195,18 +214,44 @@ const Chat = () => {
             ))}
           </ul>
           <footer className="flex flex-col gap-4 p-2">
-            {/* <input
-            value={remetente}
-            onChange={(e) => setRemetente(e.target.value)}
-            placeholder="Para..."
-            className="rounded-md p-2"
-          /> */}
-            <div className="flex gap-2">
+            {showSenderInput && (
+              <div className="flex gap-2">
+                <input
+                  id="remetente"
+                  autoFocus={true}
+                  tabIndex={0}
+                  value={remetente}
+                  onChange={(e) => setRemetente(e.target.value)}
+                  placeholder="Seu telefone... (+55 71 98888-8888)"
+                  className="rounded-md p-2 flex-1"
+                />
+
+                <button
+                  className="bg-blue-400 h-full rounded-md p-2"
+                  onClick={() => {
+                    localStorage.setItem("remetente", remetente);
+                    setShowSenderInput(false);
+                    (
+                      document.querySelector("#message") as HTMLInputElement
+                    )?.focus();
+                  }}
+                >
+                  Salvar
+                </button>
+              </div>
+            )}
+            <div
+              className={`flex gap-2 ${
+                !remetente || showSenderInput
+                  ? "pointer-events-none opacity-20"
+                  : ""
+              }`}
+            >
               <input
                 id="message"
                 className="flex-1 rounded-md p-2"
                 autoFocus={true}
-                tabIndex={0}
+                tabIndex={!remetente || showSenderInput ? -1 : 0}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Mensagem..."
@@ -219,6 +264,7 @@ const Chat = () => {
               <button
                 className="rounded-md bg-green-500 p-4 px-8"
                 onClick={() => handleSend()}
+                tabIndex={!remetente || showSenderInput ? -1 : 1}
               >
                 {/* {isLoading ? <Spin /> : <Send className="size-5" />} */}
                 <Send className="size-5" />

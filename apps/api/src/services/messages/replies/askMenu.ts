@@ -56,11 +56,11 @@ export const askMenu: MsgReplyFunc = async ({ chat, msg, entities }) => {
     { body: ["Vou te mandar cardápio, um momento..."] },
     { body: ["*Aqui estão as opções disponíveis no momento:*"], delay: 2000 },
     ...lists.map((list) => ({ body: [listToText(list)], delay: 2000 })),
-    {
-      body: ["Agora me fala..."],
-      delay: 1000,
-      delayNext: 1000,
-    },
+    // {
+    //   body: ["Agora me fala..."],
+    //   delay: 1000,
+    //   delayNext: 1000,
+    // },
     ...(await whatProductsTemplate({ chat, msg, entities })),
   ];
 };

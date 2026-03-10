@@ -53,13 +53,10 @@ export const replaceDeliveryText = (text: string, empty = false) => {
     )
     .replace(/\b(quanto\s+aqui)\b/g, empty ? "" : "quanto entrega")
     .replace(
-      /\b(aqui|n(a|o)|perto|prox|des?cendo|subindo|.*(cima|baixo))\b/g,
+      /\b(aqui(\s+(em|no|na))|perto|prox(imo)?(\s+(a|o|ao|dos?|das?|de|d|a?onde))|des?cendo|subindo|.*(cima|baixo))\b/g,
       empty ? "" : "quero entrega",
     );
 
-  //     if(chat.lastQuestion?.includes("entrega")){
-  //   r = r.replace(/\b(^(?!(cart|cred|deb|maq)\w+\s+)(e(n|m)tra|tem).+taxa(?!.*(cart|cred|deb|maq)\w+))\b/g,'')
-  // }
   console.log("before fix delivery", text);
   console.log("after fix delivery", r);
   return r;

@@ -11,8 +11,9 @@ import { saveChat, saveOrder } from "../../save";
 import { findPaymentsIA } from "@/services/ia/findPayments";
 import { emit } from "@/infra/socketio";
 import { join } from "@/services/text/join";
-import { continueOrder } from "./continueOrder";
+// import { continueOrder } from "./continueOrder";
 import { nextStep } from "./nextStep";
+import { getChats } from "@/controllers/chat/getChats";
 
 export const addPayments: MsgReplyFunc = async ({
   chat,
@@ -22,7 +23,7 @@ export const addPayments: MsgReplyFunc = async ({
   if (!chat.order?.reviewed) {
     // if (chat.context === "reviewOrder") {
     //   await saveChat(chat.id, { context: "" });
-    //   await saveOrder(chat.id, { reviewed: true });
+    //   await saveOrder(chat.order.id, { reviewed: true });
     // } else {
     return nextStep({ chat, msg, entities: _entities });
     // }
@@ -75,6 +76,7 @@ export const addPayments: MsgReplyFunc = async ({
       } as IOrderPayment;
     }),
   });
+  chat = (await getChats({ ids: [chat.id] }))[0];
 
   const paymentsText = payments
     .map((pay, i) => {
@@ -92,7 +94,7 @@ export const addPayments: MsgReplyFunc = async ({
   return [
     { body: [`Certo, o pagamento será ${paymentsText}`] },
     { delay: 1000, body: [] },
-    ...(await continueOrder({ chat, msg })),
+    ...(await nextStep({ chat, msg, entities })),
   ];
 
   entities.payments.forEach((e) => {

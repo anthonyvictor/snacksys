@@ -1,4 +1,5 @@
 import {
+  group,
   IChat,
   IChatList,
   IMessage,
@@ -23,14 +24,26 @@ export const reviewOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
   //   return await back({ chat, msg, entities });
   // }
 
-  const { bold, italic, code } = textStyles;
+  const { bold, italic, sliced } = textStyles;
   const order = chat.order!;
+
+  console.log(
+    "order.products?.length",
+    order.products?.length,
+    "\norder.type",
+    order.type,
+    "\norder.delivery?.address",
+    order.delivery?.address,
+    "\norder.delivery?.address?.reference",
+    order.delivery?.address?.reference,
+  );
   if (
     !order ||
     !order.products?.length ||
     !order.type ||
-    (order.type === "delivery" && !order.delivery?.address.original) ||
-    !order.delivery?.address?.reference
+    (order.type === "delivery" &&
+      (!order.delivery?.address.original ||
+        !order.delivery?.address?.reference))
   )
     return nextStep({ chat, msg, entities });
 
@@ -51,12 +64,24 @@ export const reviewOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
   console.log(order.products.map((p) => p.original));
 
   const products = join(
-    (order.products || []).map((prod) => {
+    group(
+      (order.products || []).map((x) => ({ ...x, originalId: x.original.id })),
+      ["originalId", "price", "discount"],
+    ).map((prod) => {
       return `- ${join(
         [
-          bold(join([`${prod.quantity}x`, prod.original.name], ", ")),
+          bold(join([`${prod.length}x`, prod[0].original.name], ", ")),
           // join([prod.description, prod.observation], ", "),
-          italic(formatCurrency(prod.price * prod.quantity)),
+          italic(
+            (() => {
+              const price = prod[0].price;
+              const discount = prod[0].discount;
+              const quantity = prod.length;
+              return discount
+                ? `${sliced(formatCurrency(eval(`${price} ${discount}`) * quantity))} ${bold(formatCurrency(price * quantity))}`
+                : `${formatCurrency(price * quantity)}`;
+            })(),
+          ),
         ],
         "\n",
       )}`;
@@ -87,8 +112,9 @@ export const reviewOrder: MsgReplyFunc = async ({ chat, msg, entities }) => {
           "\n",
         )
       : "🏪 Pedido pra retirar na loja";
+
   const productsValue = order.products.reduce(
-    (sum, p) => sum + p.price * p.quantity,
+    (sum, p) => sum + eval(`${p.price} ${p.discount}`),
     0,
   );
   // const productsDisWcount = order.products.reduce((sum, p) => sum + eval(p.price, p.discount), 0)

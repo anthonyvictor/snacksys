@@ -1,5 +1,17 @@
+import { IChatPlatform } from "types";
+
 export const textStyles = {
-  bold: (str: string | undefined | null) => (str ? `*${str}*` : ""),
+  bold: (
+    str: string | undefined | null,
+    platform: IChatPlatform = "whatsapp",
+  ) =>
+    str
+      ? platform === "whatsapp"
+        ? `*${str}*`
+        : platform === "telegram"
+          ? `**${str}**`
+          : `*${str}*`
+      : "",
   italic: (str: string | undefined | null) => (str ? `_${str}_` : ""),
   sliced: (str: string | undefined | null) => (str ? `~${str}~` : ""),
   cite: (str: string | undefined | null) => (str ? `> ${str}` : ""),

@@ -25,7 +25,7 @@ export const getChats = async ({
     q["_id"] = { $in: ids };
   }
   if (from && from.length > 0) {
-    q["from"] = { $in: from };
+    q["from.id"] = { $in: from };
   }
 
   if (platforms && platforms.length > 0) {

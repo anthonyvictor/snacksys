@@ -16,7 +16,7 @@ export const greeting: MsgReplyFunc = async ({ chat }) => {
         body: [
           bold("📋 Cardápio"),
           italic(
-            "Acesse nosso cardápio para ver quais produtos temos disponíveis"
+            "Acesse nosso cardápio para ver quais produtos temos disponíveis",
           ),
         ],
 
@@ -37,19 +37,19 @@ export const greeting: MsgReplyFunc = async ({ chat }) => {
         ],
         context: "",
       },
-      {
-        body: [
-          bold("📱 Mídias sociais"),
-          italic("Segue a gente para ficar por dentro das promoções!"),
-        ],
-        context: "",
-      },
-      {
-        body: ["🔁 Repetir o último pedido"],
-      },
-      {
-        body: ["💬 Falar com um atendente"],
-      },
+      // {
+      //   body: [
+      //     bold("📱 Mídias sociais"),
+      //     italic("Segue a gente para ficar por dentro das promoções!"),
+      //   ],
+      //   context: "",
+      // },
+      // {
+      //   body: ["🔁 Repetir o último pedido"],
+      // },
+      // {
+      //   body: ["💬 Falar com um atendente"],
+      // },
     ],
   };
 

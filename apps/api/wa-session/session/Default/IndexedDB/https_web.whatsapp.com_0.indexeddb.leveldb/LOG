@@ -1,0 +1,56 @@
+2026/02/11-19:15:57.802 d750 Reusing MANIFEST D:\Users\thonny\Documents\_ThonnyStudios\chatbot\apps\api\wa-session\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/02/11-19:15:57.806 d750 Recovering log #2131
+2026/02/11-19:15:57.861 d750 Reusing old log D:\Users\thonny\Documents\_ThonnyStudios\chatbot\apps\api\wa-session\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/002131.log 
+2026/02/11-19:16:04.066 d750 Level-0 table #2161: started
+2026/02/11-19:16:04.108 d750 Level-0 table #2161: 1135844 bytes OK
+2026/02/11-19:16:04.109 d750 Delete type=0 #2131
+2026/02/11-19:16:04.119 d750 Compacting 1@0 + 0@1 files
+2026/02/11-19:16:04.150 d750 Generated table #2162@0: 19197 keys, 351571 bytes
+2026/02/11-19:16:04.161 d750 Generated table #2163@0: 2410 keys, 136123 bytes
+2026/02/11-19:16:04.167 d750 Generated table #2164@0: 1614 keys, 53921 bytes
+2026/02/11-19:16:04.168 d750 Compacted 1@0 + 0@1 files => 541615 bytes
+2026/02/11-19:16:04.169 d750 compacted to: files[ 0 3 40 0 0 0 0 ]
+2026/02/11-19:16:04.353 d750 Compacting 1@1 + 15@2 files
+2026/02/11-19:16:04.380 d750 Generated table #2165@1: 2161 keys, 2145787 bytes
+2026/02/11-19:16:04.420 d750 Generated table #2166@1: 2941 keys, 2148055 bytes
+2026/02/11-19:16:04.451 d750 Generated table #2167@1: 2539 keys, 2147215 bytes
+2026/02/11-19:16:04.482 d750 Generated table #2168@1: 2468 keys, 2148181 bytes
+2026/02/11-19:16:04.531 d750 Generated table #2169@1: 25666 keys, 2180474 bytes
+2026/02/11-19:16:04.603 d750 Generated table #2170@1: 31229 keys, 2251254 bytes
+2026/02/11-19:16:04.690 d750 Generated table #2171@1: 29692 keys, 2252618 bytes
+2026/02/11-19:16:04.783 d750 Generated table #2172@1: 29984 keys, 2250271 bytes
+2026/02/11-19:16:04.846 d750 Generated table #2173@1: 26142 keys, 2207367 bytes
+2026/02/11-19:16:04.875 d750 Generated table #2174@1: 5539 keys, 1450419 bytes
+2026/02/11-19:16:04.876 d750 Compacted 1@1 + 15@2 files => 21181641 bytes
+2026/02/11-19:16:04.876 d750 compacted to: files[ 0 2 35 0 0 0 0 ]
+2026/02/11-19:16:04.877 d750 Delete type=2 #2161
+2026/02/11-19:16:04.919 5658 Compacting 1@1 + 11@2 files
+2026/02/11-19:16:05.007 5658 Generated table #2175@1: 86824 keys, 2236565 bytes
+2026/02/11-19:16:05.087 5658 Generated table #2176@1: 59406 keys, 2235223 bytes
+2026/02/11-19:16:05.154 5658 Generated table #2177@1: 36295 keys, 2209533 bytes
+2026/02/11-19:16:05.230 5658 Generated table #2178@1: 55527 keys, 2222622 bytes
+2026/02/11-19:16:05.267 5658 Generated table #2179@1: 3825 keys, 2144766 bytes
+2026/02/11-19:16:05.302 5658 Generated table #2180@1: 2326 keys, 2142769 bytes
+2026/02/11-19:16:05.338 5658 Generated table #2181@1: 3099 keys, 2156551 bytes
+2026/02/11-19:16:05.371 5658 Generated table #2182@1: 3096 keys, 2155629 bytes
+2026/02/11-19:16:05.405 5658 Generated table #2183@1: 3022 keys, 2155746 bytes
+2026/02/11-19:16:05.440 5658 Generated table #2184@1: 3004 keys, 2155559 bytes
+2026/02/11-19:16:05.444 5658 Generated table #2185@1: 21 keys, 94913 bytes
+2026/02/11-19:16:05.444 5658 Compacted 1@1 + 11@2 files => 21909876 bytes
+2026/02/11-19:16:05.444 5658 compacted to: files[ 0 1 35 0 0 0 0 ]
+2026/02/11-19:16:05.445 5658 Delete type=2 #926
+2026/02/11-19:16:05.445 5658 Delete type=2 #1245
+2026/02/11-19:16:05.445 5658 Delete type=2 #1382
+2026/02/11-19:16:05.446 5658 Delete type=2 #1398
+2026/02/11-19:16:05.446 5658 Delete type=2 #1426
+2026/02/11-19:16:05.446 5658 Delete type=2 #2088
+2026/02/11-19:16:05.446 5658 Delete type=2 #2145
+2026/02/11-19:16:05.446 5658 Delete type=2 #2146
+2026/02/11-19:16:05.446 5658 Delete type=2 #2147
+2026/02/11-19:16:05.446 5658 Delete type=2 #2148
+2026/02/11-19:16:05.446 5658 Delete type=2 #2149
+2026/02/11-19:16:05.446 5658 Delete type=2 #2150
+2026/02/11-19:16:05.447 5658 Delete type=2 #2151
+2026/02/11-19:16:05.447 5658 Delete type=2 #2152
+2026/02/11-19:16:05.447 5658 Delete type=2 #2153
+2026/02/11-19:16:05.447 5658 Delete type=2 #2163

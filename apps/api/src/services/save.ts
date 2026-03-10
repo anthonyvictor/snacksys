@@ -1,3 +1,4 @@
+import { getChats } from "@/controllers/chat/getChats";
 import {
   ChatModel,
   CustomerModel,
@@ -25,6 +26,8 @@ export const saveChat = async (
     if (!returnUpdated) return;
 
     if (!raw) return null;
+
+    return (await getChats({ ids: [raw.id] }))?.[0] as IChat;
 
     // Apenas serializa o que já veio do update
     return serializeMongo(raw) as IChat;
@@ -57,7 +60,7 @@ export const saveOrder = async (
     console.error(err);
   }
 };
-export const saveCustomer = async (
+export const _saveCustomer = async (
   customerId: string | undefined,
   q: Partial<ICustomer>,
   returnUpdated = false,

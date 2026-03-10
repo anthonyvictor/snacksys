@@ -1,13 +1,20 @@
 import { IAddress } from "./address";
 import { IChat, IChatPlatform, IChatStatus, IMessage } from "./chat";
+import { ICustomer } from "./customer";
 import { Entities, IntentResult } from "./intent";
 import { IOrderStatus } from "./order";
 
 export interface ReceivedMessageDTO {
-  title?: string;
-  imageUrl?: string;
+  // title?: string;
   body: string;
-  from: string;
+  from: {
+    id: string;
+    imageUrl?: string;
+    publicName?: string;
+    username?: string;
+    phoneNumber?: string;
+    email?: string;
+  };
   platform: IChatPlatform;
 }
 
@@ -55,6 +62,13 @@ export interface GetCustomersDTO {
   ids?: string[];
 }
 
+export interface SaveCustomerDTO {
+  newCustomer: Omit<ICustomer, "id" | "createdAt" | "updatedAt"> & {
+    id?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+  };
+}
 export interface GetProductsDTO {
   categorized?: boolean;
   categories?: string[];
@@ -72,9 +86,10 @@ export interface MessageReplyDTO {
   msg: string;
   entities?: Entities;
 }
-export type MsgReplyFunc = ({
-  chat,
-}: MessageReplyDTO) => Promise<(IMessage | undefined)[]>;
+export type MsgReplyFunc = (
+  { chat }: MessageReplyDTO,
+  reloadChat?: boolean,
+) => Promise<(IMessage | undefined)[]>;
 
 export interface MessageIntentDTO {
   normalized: string;

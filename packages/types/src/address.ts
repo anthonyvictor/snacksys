@@ -34,7 +34,7 @@ export interface IBuildingAddress {
   reference: string | null;
   complement: string | null;
   number: string | null;
-  foundAddress: (IAddress & { confirmed?: boolean }) | null;
+  foundAddress: IAddress | null;
   allMessages: string;
   neighborhood: string | null;
   zipCode: string | null;

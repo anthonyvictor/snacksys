@@ -2,7 +2,7 @@ import {
   IChatList,
   IMessage,
   MessageReplyDTO,
-  InformReceivingMethodEntity,
+  AskDeliveryEntity,
   MsgReplyFunc,
 } from "types";
 import { textStyles } from "@/services/text/styles";
@@ -18,7 +18,7 @@ export const informReceivingMethod: MsgReplyFunc = async ({
   msg,
   entities: _entities,
 }) => {
-  const entities = _entities as InformReceivingMethodEntity;
+  const entities = _entities as AskDeliveryEntity;
   const resps: IMessage[] = [];
 
   const { bold, italic } = textStyles;
@@ -72,7 +72,7 @@ export const informReceivingMethod: MsgReplyFunc = async ({
                 italic(entities.address.complement),
                 italic(entities.address.reference),
               ],
-              ", "
+              ", ",
             ),
           ],
         });
@@ -87,7 +87,7 @@ export const informReceivingMethod: MsgReplyFunc = async ({
             `*Rua*, Número (Opcional), *Bairro*, Complemento (Opcional), e *Ponto de Referência*`,
           ],
           delay: 500,
-        }
+        },
         // `\n${[
         //   "BAIRRO (Obrigatório)",
         //   "RUA",

@@ -26,13 +26,13 @@ export function getMinProductPrice(product: IProduct): number | null {
         option.active &&
         (option.original.stock === null ||
           option.original.stock === undefined ||
-          option.original.stock > 0)
+          option.original.stock > 0),
     );
 
     // 3. Verifica a viabilidade de satisfazer o 'min'
     if (availableOptions.length === 0) {
       console.error(
-        `Erro: Modifier "${modifier.original.internalName}" requer ${modifier.min} seleção(ões), mas não há opções disponíveis.`
+        `Erro: Modifier "${modifier.original.internalName}" requer ${modifier.min} seleção(ões), mas não há opções disponíveis.`,
       );
       return null; // Não é possível atender ao requisito mínimo
     }
@@ -43,7 +43,7 @@ export function getMinProductPrice(product: IProduct): number | null {
       // Caso 3A: Se for repetível, escolhemos a opção mais barata 'min' vezes.
       const cheapestOption = availableOptions.reduce(
         (min, current) => (current.price < min.price ? current : min),
-        availableOptions[0]
+        availableOptions[0],
       );
 
       const cheapestPrice = cheapestOption.price;
@@ -64,7 +64,7 @@ export function getMinProductPrice(product: IProduct): number | null {
       // Caso 3B: Se não for repetível, precisamos de opções únicas.
       if (availableOptions.length < modifier.min) {
         console.error(
-          `Erro: Modifier "${modifier.original.internalName}" requer ${modifier.min} seleções únicas, mas só há ${availableOptions.length} opções disponíveis.`
+          `Erro: Modifier "${modifier.original.internalName}" requer ${modifier.min} seleções únicas, mas só há ${availableOptions.length} opções disponíveis.`,
         );
         return null; // Não é possível atender ao requisito mínimo
       }
@@ -80,7 +80,7 @@ export function getMinProductPrice(product: IProduct): number | null {
         case "sum":
           minModifierCost = selectedPrices.reduce(
             (sum, price) => sum + price,
-            0
+            0,
           );
           break;
         case "average":

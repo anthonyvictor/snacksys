@@ -27,23 +27,25 @@ const order = [
   },
 ];
 
+const chat = [
+  { path: "order", populate: order },
+  // { path: "customer", populate: customer },
+  {
+    path: "tempAddress",
+    populate: [
+      {
+        // remova quantity, não ta servindo pra nada e pode atrapalhar
+        // cada produto deve ter seu proprio preço desconto etc
+        path: "foundAddress",
+        model: "Address",
+      },
+    ],
+  },
+];
+
 export const populates = {
   order,
-  chat: [
-    { path: "order", populate: order },
-    { path: "customer", populate: customer },
-    {
-      path: "tempAddress",
-      populate: [
-        {
-          // remova quantity, não ta servindo pra nada e pode atrapalhar
-          // cada produto deve ter seu proprio preço desconto etc
-          path: "foundAddress",
-          model: "Address",
-        },
-      ],
-    },
-  ],
+  chat,
   address,
   customer,
   product,

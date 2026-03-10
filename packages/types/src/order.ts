@@ -17,7 +17,6 @@ export interface IOrder {
   type: IOrderType | null;
   delivery: IOrderDelivery | null;
   subtotal: number;
-  discount: number;
   status: IOrderStatus;
   observations: string | null;
   reviewed: boolean;
@@ -39,7 +38,6 @@ export interface IOrderProduct {
   orderId: string;
   original: IProduct;
   // observation?: string;
-  quantity: number;
   price: number;
   discount: string;
   createdAt: Date;
@@ -61,7 +59,7 @@ export interface IOrderDelivery {
   address: IFinalAddress;
   courier: ICourier;
   fee: number;
-  discount: number;
+  discount: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -75,7 +73,6 @@ const OrderProductSchema = new Schema<IOrderProduct>(
       ref: "Product",
       required: true,
     },
-    quantity: { type: Number, required: true },
     price: { type: Number, required: true },
     discount: { type: String, default: "" },
   },
@@ -109,7 +106,7 @@ const OrderDeliverySchema = new Schema(
       required: true,
     },
     fee: { type: Number, required: true },
-    discount: { type: Number, required: true, default: 0 },
+    discount: { type: String, default: "" },
   },
   { timestamps: true },
 );
@@ -126,7 +123,7 @@ const OrderSchema = new Schema(
     payments: { type: [OrderPaymentSchema], default: [] },
     delivery: { type: OrderDeliverySchema, default: null },
 
-    discount: { type: Number, default: 0 },
+    // discount: { type: String, default: '' },
     reviewed: { type: Boolean, default: false },
 
     observations: { type: String },

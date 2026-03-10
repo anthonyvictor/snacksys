@@ -11,8 +11,7 @@ function fuzzyMatch(a: string, b: string): boolean {
   return levenshtein(a, b) <= 2;
 }
 
-function normalizeMessage(originalMessage: string): string {
-  console.log("ORIGINAL", originalMessage);
+function prepareProductsMsg(originalMessage: string): string {
   const msg = replaceProductsText(
     replaceDeliveryText(
       replacePaymentsText(
@@ -22,7 +21,7 @@ function normalizeMessage(originalMessage: string): string {
           .trim()
           .replace(
             /\b((d(e|o|a)s?)|co?m|sem?|tem|pa?ra|por|os?|as?|em?|ou|n(o|a)s?|u(m|n)a?s?)\b/g,
-            ""
+            "",
           )
 
           .replace(/\b(o(q|k)u?e?)\b/g, "")
@@ -33,34 +32,34 @@ function normalizeMessage(originalMessage: string): string {
           .trim()
           .replace(
             /\b((pr?a?\s+)?e(n|m)tr?egar?|deliver(y|e)|frete?|((pr?a?|se)\s+)?tra(z|s)er?|trou(x|s)er)\b/g,
-            ""
+            "",
           )
           .replace(/\b(paga?(mento|r)?.*())\b/g, "")
 
           .replace(/\b(os?|as?|e)\b/g, "")
           .replace(
             /\b(eu|tu|noi?s|me|gent(e|i)?|galera|povos?|pessoal|el(e|a|i)s?|tu|vo?ce?s?)\b/g,
-            ""
+            "",
           )
 
           // ORDENS
           .replace(
             /\b((q|k)u?e?r(o|u|emos?)?|adi?cion(e|a)|colo(que|ca)|bot(a|e)|ad|(vei?(ja)?|mand|en(v|f)i)(ar?|e)(\s+ai)?|v(ou?|ai|amos?)\s+quer(o|er?)|querem(os)?|tra(s|z))\b/g,
-            ""
+            "",
           )
 
           .replace(
             /(?<!\b(codigo|pix)\s)\bqr\b(?!\s*(pix|((qr)?cod(igo|e)?)))/g,
-            ""
+            "",
           ),
-        true
+        true,
       )
         .replace(/\s+/g, " ")
         .trim(),
-      true
+      true,
     )
       .replace(/\s+/g, " ")
-      .trim()
+      .trim(),
   )
     .replace(/\s+/g, " ")
     .trim();
@@ -108,9 +107,9 @@ function normalizeMessage(originalMessage: string): string {
 
 export function findProductCandidates(
   products: IProduct[],
-  customerText: string
+  customerText: string,
 ): Array<IProduct & { score: number; matchedWords: string[] }> {
-  const normalizedText = normalizeMessage(customerText);
+  const normalizedText = prepareProductsMsg(customerText);
 
   const customerTokens = tokenize(normalizedText).filter((t) => t.length >= 4);
 
@@ -128,15 +127,15 @@ export function findProductCandidates(
   return products
     .map((product) => {
       const nameTokens = new Set(
-        tokenize(product.name).filter((t) => t.length >= 4)
+        tokenize(product.name).filter((t) => t.length >= 4),
       );
       const tagTokens = new Set(
         (product.tags ?? [])
           .flatMap((t) => tokenize(t))
-          .filter((t) => t.length >= 4)
+          .filter((t) => t.length >= 4),
       );
       const descTokens = new Set(
-        tokenize(product.description ?? "").filter((t) => t.length >= 4)
+        tokenize(product.description ?? "").filter((t) => t.length >= 4),
       );
 
       let score = 0;
@@ -192,7 +191,7 @@ function buildWordFrequency(products: IProduct[]): Map<string, number> {
 
   for (const p of products) {
     const words = new Set(
-      tokenize(`${p.name} ${p.description ?? ""} ${(p.tags ?? []).join(" ")}`)
+      tokenize(`${p.name} ${p.description ?? ""} ${(p.tags ?? []).join(" ")}`),
     );
 
     for (const w of words) {

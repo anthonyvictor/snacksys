@@ -1,15 +1,22 @@
 import { model, Model, models, Schema } from "mongoose";
-import { ICustomer } from "./customer";
+import { IBuildingCustomer, ICustomer } from "./customer";
 import { IOrder, IOrderPayment, IOrderProduct } from "./order";
 import { IBuildingAddress } from "./address";
 
 export interface IChat {
   id: string;
-  from: string;
+  from: {
+    id: string;
+    imageUrl: string | null;
+    publicName: string | null;
+    fullName: string | null;
+    username: string | null;
+    phoneNumber: string | null;
+    email: string | null;
+  };
   title: string | null;
   platform: IChatPlatform;
-  imageUrl: string | null;
-  customer: ICustomer | null;
+  // tempCustomer: IBuildingCustomer;
   order: IOrder | null;
   // messages: IMessage[];
   // products: IOrderProduct[];
@@ -17,6 +24,7 @@ export interface IChat {
   isReplying: boolean;
   lostMsg: string | null;
   menuSent: boolean;
+  customerAskDeliveryFee: boolean;
   askSavedAddress: boolean;
   askLocation: boolean;
   context: string;
@@ -26,6 +34,7 @@ export interface IChat {
     | "qual_endereco"
     | null;
   tempAddress: IBuildingAddress | null;
+  // tempPayments: IBuildingPayment[] | null;
   status: IChatStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -95,8 +104,15 @@ const ChatListSchema = new Schema({
 const ChatSchema = new Schema<IChat>(
   {
     title: String,
-    imageUrl: String,
-    from: { type: String, required: true },
+    from: {
+      id: { type: String, required: true },
+      imageUrl: { type: String, default: null },
+      publicName: { type: String, default: null },
+      fullName: { type: String, default: null },
+      username: { type: String, default: null },
+      phoneNumber: { type: String, default: null },
+      email: { type: String, default: null },
+    },
     platform: {
       type: String,
       enum: ["whatsapp", "telegram", "messenger"],
@@ -105,6 +121,7 @@ const ChatSchema = new Schema<IChat>(
     isReplying: { type: Boolean, default: false },
     lostMsg: { type: String },
     menuSent: { type: Boolean, default: false },
+    customerAskDeliveryFee: { type: Boolean, default: false },
     askSavedAddress: { type: Boolean, default: false },
     askLocation: { type: Boolean, default: false },
     status: {
@@ -113,7 +130,13 @@ const ChatSchema = new Schema<IChat>(
       default: "open",
       required: true,
     },
-    customer: { type: Schema.Types.ObjectId, ref: "Customer" },
+    // tempCustomer: {
+    //   name: { type: String, default: null },
+    //   imageUrl: { type: String, default: null },
+    //   phone: { type: String, default: null },
+    //   tags: { type: [String], default: [] },
+    //   foundCustomer: { type: Schema.Types.ObjectId, ref: "Customer" },
+    // },
     order: { type: Schema.Types.ObjectId, ref: "Order" },
     tempAddress: {
       street: String,
@@ -125,6 +148,7 @@ const ChatSchema = new Schema<IChat>(
       zipCode: String,
       city: String,
       state: String,
+      allMessages: String,
       fullAddress: String,
       confirmed: { type: Boolean, default: false },
     },

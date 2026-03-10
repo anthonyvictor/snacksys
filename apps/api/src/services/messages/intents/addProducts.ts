@@ -6,5 +6,5 @@ export const addProducts: MsgIntentFunc = async ({ normalized }) => {
 
   console.log("\n\n\nn:\n", n);
 
-  return !!n.match(/\b(quero.*comida|((\d+)\s+)?comida)\b/g); //|s\/\w+
+  return !!n.match(/\b(^comida.*|quero.*comida|\d+\s+comida)\b/g); //|s\/\w+
 };

@@ -1,56 +1,48 @@
-import { IAddress, IFinalAddress, IOrderDelivery, MsgReplyFunc } from "types";
+import {
+  IAddress,
+  IChat,
+  ICustomer,
+  IFinalAddress,
+  IOrderDelivery,
+  MsgReplyFunc,
+} from "types";
 import { nextStepTemplate } from "../templates/nextStep";
-import { saveChat, saveCustomer, saveOrder } from "@/services/save";
+import { saveChat, saveOrder } from "@/services/save";
+import { getChats } from "@/controllers/chat/getChats";
+import { askDelivery } from "./askDelivery";
+import { getCustomers } from "@/controllers/customer/getCustomers";
+import { saveOrderDeliveryTemplate } from "../templates/saveOrderDelivery";
+import { saveOrderSavedAddrTemplate } from "../templates/saveOrderSavedAddr";
 
 export const confirm: MsgReplyFunc = async ({ chat, msg, entities }) => {
   if (chat.context === "askSavedAddress") {
-    saveOrder(chat.order?.id, {
-      delivery: {
-        ...(chat.order?.delivery ?? {}),
-        address: chat.customer?.address!,
-      } as IOrderDelivery,
-            reviewed: false,
-
-    });
-    saveChat(chat.id, {
-      context: "",
-    });
+    return saveOrderSavedAddrTemplate({ chat, msg, entities });
+  } else if (chat.context === "reviewOrder") {
+    saveOrder(chat.order?.id, { reviewed: true });
+    chat = (await getChats({ ids: [chat.id] }))[0];
+    return nextStepTemplate({ chat, msg, entities });
+  } else if (chat.context === "unReview") {
+    saveOrder(chat.order?.id, { reviewed: false });
     return [
-      { body: [`Ok, vamos entregar nesse endereço então! 📝`] },
-      ...(await nextStepTemplate({ chat, msg, entities })),
-    ];
-  } else if (chat.context === "confirmAddress") {
-    const finalAddress = {
-      original: chat.tempAddress?.foundAddress?.id!,
-      reference: chat.tempAddress?.reference,
-      complement: chat.tempAddress?.complement,
-      number: chat.tempAddress?.number,
-    } as unknown as IFinalAddress;
-    saveOrder(chat.order?.id, {
-      delivery: {
-        ...(chat.order?.delivery ?? {}),
-        address: finalAddress,
-      } as IOrderDelivery,
-      reviewed: false,
-    });
-    if (!chat.customer?.address) {
-      saveCustomer(chat.customer?.id, {
-        address: finalAddress,
-      });
-    }
-    saveChat(chat.id, {
-      context: "",
-      tempAddress: {
-        ...chat.tempAddress!,
-        foundAddress: chat.tempAddress?.foundAddress
-          ?.id! as unknown as IAddress,
-        confirmed: true,
+      {
+        body: [`Certo, o que deseja alterar no pedido?`],
       },
-    });
-    return [
-      { body: [`Ok, endereço salvo! 📝`] },
-      ...(await nextStepTemplate({ chat, msg, entities })),
     ];
+  } else if (chat.context === "verifyAndConfirmDelivery") {
+    await saveChat(chat.id, { customerAskDeliveryFee: false });
+    return saveOrderDeliveryTemplate({ chat, msg, entities });
+  } else if (chat.context === "confirmAddress") {
+    if (chat.tempAddress?.foundAddress) {
+      console.log("entrou em confirm address", chat.tempAddress);
+      chat = (await saveChat(
+        chat.id,
+        { "tempAddress.confirmed": true } as any,
+        true,
+      )) as IChat;
+      return askDelivery({ chat, msg, entities });
+    } else {
+      return nextStepTemplate({ chat, msg, entities });
+    }
   } else {
     return nextStepTemplate({ chat, msg, entities });
   }

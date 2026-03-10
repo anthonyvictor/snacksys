@@ -6,7 +6,7 @@ import { removeDuplicateWords } from "../text/removeDuplicateWords";
 export const detectIntent = async (msg: string, chat: IChat) => {
   const normalized = removeDuplicateWords(
     removeDuplicateChars(
-      removeAccents(msg.toLowerCase()).replace(/[^0-9a-z ]/g, " ")
+      removeAccents(msg.toLowerCase()).replace(/[^0-9a-z ]/g, " "),
     )
       .replace(/\s+/g, " ")
       .trim()
@@ -21,9 +21,10 @@ export const detectIntent = async (msg: string, chat: IChat) => {
       .replace(/\b(os?|as?|e)\b/g, "")
       .replace(/\b(pa?ra?.*noi?s)\b/g, "")
       .replace(/\b(?:noi?s\s+((?:va|que)\w*))\b/g, "quero")
+      .replace(/\b(ma?n?d(a|e)?|me d(a|e))\b/g, "quero")
       .replace(
         /\b(eu|tu|me|gent(e|i)?|galera|povos?|pessoal|el(e|a|i)s?|tu|vo?ce?s?)\b/g,
-        ""
+        "",
       )
       .replace(/\s+/g, " ")
       .trim()
@@ -31,14 +32,14 @@ export const detectIntent = async (msg: string, chat: IChat) => {
       // ORDENS
       .replace(
         /\b((q|k)u?e?r(o|u|emos?)?(\s+(pa?r?a?|co?mo?))?|va(o|i)\s+ser?(\s+(pa?r?a?|co?mo?))?|inclu(ir?|a)|colo(que|car?)(\s+(pa?r?a?|co?mo?))?|ad|(vei?(ja)?|(m(a|e)nd|(e|r)n(v|f)i|adi?cion|bot)(ar?|e))(\s+ai)?|v(ou?|ai|amos?)\s+quer(o|er?)|querem(os)?|tra(s|z))\b/g,
-        "quero"
+        "quero",
       )
 
       .replace(/\b(vai ser)\b/g, "quero")
 
       .replace(
         /(?<!\b(codigo|pix)\s)\bqr\b(?!\s*(pix|((qr)?cod(igo|e)?)))/g,
-        "quero"
+        "quero",
       )
       .replace(/\s+/g, " ")
       .trim()
@@ -52,21 +53,23 @@ export const detectIntent = async (msg: string, chat: IChat) => {
 
       // CANCELAMENTOS
       .replace(/\b(de?i?x(a|e)?)\b/g, "cancela")
+      .replace(/\b(co?m? vo?ce?s)\b/g, "")
+      .replace(/\b(vo?ce?s?|eu)\b/g, "")
 
       // SAUDAÇÕES
       .replace(
         /\b(^boa$|b(oa|om)?\s*(dia|(n|m)oi?te?|tar?d(e|i)?)|boa\s+pr?a?\s+noi?s(\s*familia)|fala\s*tu|oie|opa|ola(h|r)?|salve|(q|c)f|cofoi|qual\s*foi|col?e|e\s?a(i|e))\b/g,
-        "oi"
+        "oi",
       )
       .replace(
-        /\b(como\s+(va(i|o)|(es)?ta(o|s)?)|(tu?do?|(es)?tao?)\s+(b|bem|bom|tran?qui?lo|be?le?za?|de\s*boas?)(\s+com)?)\b/g,
-        "oi"
+        /\b(como|tudo)\b.*\b(est[aã]o|bom|tran?qui?lo|be?le?(z|s)a?|bele|boas?)\b/g,
+        "oi",
       )
 
       // .replace(/\b(aqu?i?|la|n(o|a)s?|ai)\b/g, "")
 
       .replace(/\s+/g, " ")
-      .trim()
+      .trim(),
   );
 
   // const unique = removeDuplicateChars(normalized);

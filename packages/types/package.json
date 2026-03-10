@@ -8,5 +8,8 @@
   },
   "peerDependencies": {
     "mongoose": "*"
+  },
+  "dependencies": {
+    "libphonenumber-js": "^1.12.36"
   }
 }

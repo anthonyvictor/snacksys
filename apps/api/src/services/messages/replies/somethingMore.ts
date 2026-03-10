@@ -1,4 +1,4 @@
-import { IMessage, MessageReplyDTO, MsgReplyFunc } from "types";
+import { group, IMessage, MessageReplyDTO, MsgReplyFunc } from "types";
 import { getTotal } from "@/services/order/total";
 import { formatCurrency } from "@/services/format";
 import { join } from "@/services/text/join";
@@ -75,12 +75,15 @@ export const somethingMore: MsgReplyFunc = async ({
 
     const products =
       `*==== PRODUTOS ====*\n\n` +
-      order.products
+      group(
+        order.products.map((x) => ({ ...x, originalId: x.original.id })),
+        ["originalId", "price", "discount"],
+      )
         .map((prod) =>
           [
-            `*- x${prod.quantity} ${prod.original.name}*`,
-            ` ${formatCurrency(prod.price * prod.quantity - prod.discount)}`,
-          ].join("\n")
+            `*- x${prod.length} ${prod[0].original.name}*`,
+            ` ${formatCurrency(eval(`${prod[0].price} ${prod[0].discount}`) * prod.length)}`,
+          ].join("\n"),
         )
         .join("\n\n");
 
@@ -92,7 +95,7 @@ export const somethingMore: MsgReplyFunc = async ({
         `*==== ENTREGA ====*\n\n` +
         join(
           [neighborhood?.name, complement, number, reference, street, zipCode],
-          ", "
+          ", ",
         );
       data.push(delivery);
     } else if (order.type === "pickup") {
@@ -110,15 +113,15 @@ export const somethingMore: MsgReplyFunc = async ({
                 pay.method === "card"
                   ? "No cartão"
                   : pay.method === "cash"
-                  ? "Em dinheiro"
-                  : "Via PIX"
+                    ? "Em dinheiro"
+                    : "Via PIX"
               }*`,
               pay.method === "cash"
                 ? ` ${pay.changeFor ? `Troco p/${pay.changeFor}` : "Sem troco"}`
                 : "",
             ],
-            "\n"
-          )
+            "\n",
+          ),
         )
         .join("\n\n");
     data.push(payments);

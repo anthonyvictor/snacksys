@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import router from "./routes";
 import { initSocket } from "@/infra/socketio";
-import { initWhatsapp } from "@/infra/whatsapp";
+import { startWhatsapp } from "@/infra/whatsapp";
 import { createIndex } from "./infra/db";
 import { ChatModel } from "types";
 // import { initCloudinary } from './services/cloudinary'
@@ -28,7 +28,7 @@ async function startServer() {
 
   // 1️⃣ Inicia WhatsApp (e reconecta clientes)
   console.info("[🟢 WhatsApp 📲 ] Inicializando sessões...");
-  await initWhatsapp();
+  await startWhatsapp();
 
   // // 1️⃣ Inicia Cloudinary
   // console.info('[🔵 Cloudinary 🌧️ ] Inicializando cloudinary...')
@@ -41,7 +41,7 @@ async function startServer() {
   // 3️⃣ Inicia o servidor HTTP e Socket.IO
   const PORT = process.env.PORT || 3000;
   httpServer.listen(PORT, () =>
-    console.info(`[🟡 Servidor 🏠 ] Rodando na porta ${PORT}`)
+    console.info(`[🟡 Servidor 🏠 ] Rodando na porta ${PORT}`),
   );
 }
 

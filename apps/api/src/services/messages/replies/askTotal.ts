@@ -25,10 +25,8 @@ export const askTotal: MsgReplyFunc = async ({ chat, msg, entities }) => {
     ];
   }
 
-  const productsPrice = order.products.reduce(
-    (sum, p) => sum + p.quantity * p.original.basePrice,
-    0
-  );
+  const productsPrice = order.products.reduce((sum, p) => sum + p.price, 0);
+
   const feePrice = order.type === "delivery" ? order.delivery?.fee || 0 : 0;
   const totalPrice = productsPrice + feePrice;
   return [

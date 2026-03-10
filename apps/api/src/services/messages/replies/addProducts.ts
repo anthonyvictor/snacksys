@@ -1,6 +1,8 @@
 import {
   capitalize,
+  CustomerModel,
   getOrderValues,
+  ICustomer,
   IMessage,
   IProduct,
   IProductCategory,
@@ -17,11 +19,20 @@ import { textStyles } from "@/services/text/styles";
 import { findProductCandidates } from "@/services/product/filter";
 import { send } from "../send";
 import { whatProductsTemplate } from "../templates/whatProducts";
+import { getCustomers } from "@/controllers/customer/getCustomers";
 
 export const addProducts: MsgReplyFunc = async ({ chat, msg, entities }) => {
   const { code, italic, bold } = textStyles;
 
   const products = await getProducts({});
+
+  // console.log(
+  //   products.map(({ name, description, tags }) => ({
+  //     name,
+  //     description,
+  //     tags,
+  //   })),
+  // );
 
   let preCandidates = findProductCandidates(products, msg).slice(0, 15);
 
@@ -119,16 +130,50 @@ export const addProducts: MsgReplyFunc = async ({ chat, msg, entities }) => {
 
   if (oneCandidate.length) {
     let order = chat.order;
-    const prodsToCreate = oneCandidate.map(({ candidates, quantity }) => ({
-      original: candidates[0].id,
-      discount: 0,
-      price: candidates[0].original!.basePrice,
-      quantity,
-    }));
+    const prodsToCreate = oneCandidate
+      .map(({ candidates, quantity }) => {
+        const r = {
+          original: candidates[0].id,
+          discount: "",
+          price: candidates[0].original!.basePrice,
+        };
+        return Array(quantity).fill(r);
+      })
+      .flat();
 
     if (!order) {
+      // vai criar um novo pedido
+      let customer: ICustomer | null = null;
+      if (chat.platform === "whatsapp") {
+        // se for whatsapp, procura no banco cliente com esse numero
+        customer = (await getCustomers({ phone: [chat.from.phoneNumber!] }))[0];
+      }
+      // if (!customer) {
+      //   // se n encontrar, cria um novo
+      //   if (chat.platform === "whatsapp") {
+      //     customer = await CustomerModel.create({
+      //       name: "",
+      //       description: chat.from.publicName,
+      //       imageUrl: chat.from.imageUrl,
+      //       phone: chat.from.phoneNumber || "",
+      //     });
+      //      (await saveCustomer(
+      //       undefined,
+      //       {
+      //         name: "",
+      //         description: chat.from.publicName,
+      //         imageUrl: chat.from.imageUrl,
+      //         phone: chat.from.phoneNumber || "",
+      //       },
+      //       true,
+      //     ))!;
+      //   } else {
+      //     throw new Error("Plataforma não suportada!");
+      //   }
+      // }
       const _order = await OrderModel.create({
         products: prodsToCreate,
+        customer,
         status: "building",
       });
 
